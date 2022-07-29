@@ -1,0 +1,339 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "OpenGate data collection API",
+        "version": "1.0.0",
+        "description": "API to send raw IoT data to OpenGate.",
+        "contact": {
+            "name": "OpenGate",
+            "email": "info@amplia.es",
+            "url": "https://www.opengate.es"
+        }
+    },
+    "security": [
+        {
+            "ApiKeyAmplia": []
+        }
+    ],
+    "servers": [
+        {
+            "url": "https://api.opengate.es"
+        }
+    ],
+    "paths": {
+        "/south/v80/devices/{device_id}/collect/iot": {
+            "post": {
+                "description": "This end point allows devices send raw data to OpenGate.\n\nIt can be done by:\n\n- sending data points with their respective timestamps in different datastreams in a only request\n- sending data points without timestamp in different datastreams in a only request",
+                "tags": [
+                    "Collecting information"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "device_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "The OpenGate API query allows to obtain the available workgroups provisioned under the domain of the user that sends the request.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Datastream"
+                            },
+                            "examples": {
+                                "Send data stream with multiple datapoints": {
+                                    "value": {
+                                        "version": "1.0.0",
+                                        "datastreams": [
+                                            {
+                                                "id": "temperature",
+                                                "feed": "feed_1",
+                                                "datapoints": [
+                                                    {
+                                                        "at": 1431602523123,
+                                                        "value": 25
+                                                    },
+                                                    {
+                                                        "at": 1431602523123,
+                                                        "value": 26
+                                                    },
+                                                    {
+                                                        "at": 1431602523123,
+                                                        "value": 27
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "key",
+                                                "feed": "feed_2",
+                                                "datapoints": [
+                                                    {
+                                                        "at": 1431602523123,
+                                                        "value": "revalue"
+                                                    },
+                                                    {
+                                                        "at": 1431602523123,
+                                                        "value": "string value"
+                                                    },
+                                                    {
+                                                        "at": 1431602523123,
+                                                        "value": "any string"
+                                                    },
+                                                    {
+                                                        "at": 1431602523123,
+                                                        "value": "structured data"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "datastream",
+                                                "datapoints": [
+                                                    {
+                                                        "at": 1431602523123,
+                                                        "value": 51,
+                                                        "tags": [
+                                                            "tag_1",
+                                                            "tag_2"
+                                                        ]
+                                                    },
+                                                    {
+                                                        "at": 1431602523123,
+                                                        "value": 102,
+                                                        "tags": [
+                                                            "tag_2",
+                                                            "tag_3"
+                                                        ]
+                                                    },
+                                                    {
+                                                        "at": 1431602523123,
+                                                        "value": 32
+                                                    },
+                                                    {
+                                                        "at": 1431602523123,
+                                                        "value": 16,
+                                                        "tags": [
+                                                            "tag_3"
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                "Send the latest value with a single data point to each data stream (no timestamp)": {
+                                    "value": {
+                                        "version": "1.0.0",
+                                        "datastreams": [
+                                            {
+                                                "id": "example",
+                                                "feed": "feed_1",
+                                                "datapoints": [
+                                                    {
+                                                        "value": 333
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "key",
+                                                "feed": "feed_2",
+                                                "datapoints": [
+                                                    {
+                                                        "value": "value"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "datastream",
+                                                "datapoints": [
+                                                    {
+                                                        "value": 1337
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                "Send latest value with a single data point to one data stream sended by a sub-device with trusted boot": {
+                                    "value": {
+                                        "version": "1.0.0",
+                                        "device": "sub-device-001",
+                                        "path": [
+                                            "gateway1"
+                                        ],
+                                        "trustedBoot": "c440ffad-3c7e-4c96-9297-0ae06610b273",
+                                        "datastreams": [
+                                            {
+                                                "id": "oil-pressure",
+                                                "datapoints": [
+                                                    {
+                                                        "at": 1490092712000,
+                                                        "value": 342
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Expected response to a valid request."
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "ApiKeyAmplia": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "X-ApiKey",
+                "description": "Api Key de acceso al servidor."
+            }
+        },
+        "schemas": {
+            "Datastream": {
+                "required": [
+                    "version",
+                    "datastreams"
+                ],
+                "properties": {
+                    "version": {
+                        "description": "Indicates the version of the structure.",
+                        "type": "string",
+                        "example": "<version>"
+                    },
+                    "device": {
+                        "description": "Device Identifier in case of be different that the device Identifier that sends information (included in the URI).",
+                        "type": "string",
+                        "example": "<device>"
+                    },
+                    "path": {
+                        "description": "Identifier of the gateway or gateways that as been used by the asset for sending the information.",
+                        "type": "string",
+                        "example": "<path>"
+                    },
+                    "trustedBoot": {
+                        "description": "In this case you are indicating that is required a validation type trusted_boot, it’s not necessary introduce the field value but if you introduce it all the message received by the platform will compare the trustedBoot value with the provisioned value if are diferent the message will not be collected.",
+                        "type": "string",
+                        "example": "<trustedBoot>"
+                    },
+                    "datastreams": {
+                        "description": "Array of datastreams to be collected.",
+                        "type": "object",
+                        "example": "<datastreams>",
+                        "required": [
+                            "id",
+                            "datapoints"
+                        ],
+                        "properties": {
+                            "id": {
+                                "description": "Identifier of the datastream.",
+                                "type": "string",
+                                "example": "<id>"
+                            },
+                            "feed": {
+                                "description": "Feed Identifier.",
+                                "type": "string",
+                                "example": "<feed>"
+                            },
+                            "datapoints": {
+                                "description": "Array of datapoints data to be collected.",
+                                "type": "object",
+                                "example": "<datapoints>",
+                                "required": [
+                                    "value"
+                                ],
+                                "properties": {
+                                    "from": {
+                                        "description": "Number with the time in miliseconds from epoch of the start period of measurement. This indicates that value is the same within this time interval (from -→ at).",
+                                        "type": "number",
+                                        "example": "<from>"
+                                    },
+                                    "at": {
+                                        "description": "Number with the time in miliseconds from epoch of the measurement. If this field is missing, the platform will assign the server current time to the datapoint whe data is received.",
+                                        "type": "number",
+                                        "example": "<at>"
+                                    },
+                                    "value": {
+                                        "description": "Collected value",
+                                        "type": "object",
+                                        "additionalProperties": {
+                                            "oneOf": [
+                                                {
+                                                    "type": "number"
+                                                },
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "boolean"
+                                                },
+                                                {
+                                                    "type": "object"
+                                                },
+                                                {
+                                                    "type": "array"
+                                                }
+                                            ]
+                                        },
+                                        "example": "<value>"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "Error": {
+                "type": "object",
+                "required": [
+                    "code",
+                    "message"
+                ],
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "context": {
+                        "type": "array",
+                        "description": "context of the error, attempts to clarify the point where the error occurs",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

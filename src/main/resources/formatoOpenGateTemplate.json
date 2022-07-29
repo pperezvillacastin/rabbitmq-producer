@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "datastreams": [
+    {
+      "id": "flowrate",
+      "feed": "flowratereader",
+      "datapoints": [
+        {
+          "value": REPLACEME
+        }
+      ]
+    }
+  ]
+}
