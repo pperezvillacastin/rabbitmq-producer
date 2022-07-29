@@ -24,7 +24,7 @@ public class Sender {
     @Value("classpath:formatoOpenGateTemplate.json")
     private Resource templateResource;
 
-    @Scheduled(fixedDelay = 2000, initialDelay = 500)
+    @Scheduled(fixedDelayString = "${queue.write.rate}", initialDelay = 2000)
     public void send(){
         log.info("Preparing to send");
         try {

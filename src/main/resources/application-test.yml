@@ -5,3 +5,4 @@ spring:
     username: test
     password: test
 rabbitmq.producer.queuename: msa-queue
+queue.write.rate: 5000
