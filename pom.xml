@@ -16,6 +16,10 @@
 	<properties>
 		<java.version>11</java.version>
 	</properties>
+        <scm>
+		<developerConnection>scm:git:https://github.com/pperezvillacastin/rabbitmq-producer.git</developerConnection>
+                <tag>rabbitmq-producer-0.0.1</tag>
+	</scm>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
