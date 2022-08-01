@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>ejercicio.ampliaiot</groupId>
 	<artifactId>rabbitmq-producer</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>rabbitmq-producer</name>
 	<description>Simple RabbitMQ Producer Module</description>
 	<properties>
@@ -17,7 +17,7 @@
 	</properties>
         <scm>
 		<developerConnection>scm:git:https://github.com/pperezvillacastin/rabbitmq-producer.git</developerConnection>
-                <tag>rabbitmq-producer-0.0.2</tag>
+                <tag>rabbitmq-producer-0.0.1</tag>
 	</scm>
 	<dependencies>
 		<dependency>
