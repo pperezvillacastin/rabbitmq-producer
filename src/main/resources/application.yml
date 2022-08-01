@@ -5,4 +5,5 @@ spring:
     username: ${RABBITMQ_USERNAME}
     password: ${RABBITMQ_PASSWORD}
 rabbitmq.producer.queuename: ${RABBITMQ_QUEUENAME}
+rabbitmq.messagesperbatch: 300
 queue.write.rate: ${QUEUE_WRITE_RATE}

@@ -15,6 +15,9 @@ import java.nio.charset.StandardCharsets;
 
 @Log
 public class Sender {
+    @Value("${rabbitmq.messagesperbatch}")
+    private String rabbitmqMessagesPerBatchString;
+
     @Autowired
     private RabbitTemplate template;
 
@@ -24,15 +27,18 @@ public class Sender {
     @Value("classpath:formatoOpenGateTemplate.json")
     private Resource templateResource;
 
-    @Scheduled(fixedDelayString = "${queue.write.rate}", initialDelay = 2000)
+    @Scheduled(fixedDelayString = "${queue.write.rate}", initialDelay = 3000)
     public void send(){
         log.info("Preparing to send");
         try {
             String templateString = FileCopyUtils.copyToString(new InputStreamReader(templateResource.getInputStream(), StandardCharsets.UTF_8));
-            Double randomDouble = RandomUtils.nextDouble(0.0, 50);
-            String finalMessage = templateString.replace("REPLACEME", randomDouble.toString());
-            this.template.convertAndSend(queue.getName(), finalMessage);
-            log.info(" [x] Sent '" + finalMessage + "'");
+            for (int i=0; i<=Integer.valueOf(rabbitmqMessagesPerBatchString)-1; i++) {
+                //Generar on double aleatorio pero rendondearlo a un decimal
+                Double randomDouble = Math.round(RandomUtils.nextDouble(0.0, 50)*10.0)/10.0;
+                String finalMessage = templateString.replace("REPLACEME", randomDouble.toString());
+                this.template.convertAndSend(queue.getName(), finalMessage);
+                log.info(" [" + i + "] Sent '" + finalMessage + "'");
+            }
         } catch (FileNotFoundException e) {
             log.info(ExceptionUtils.getStackTrace(e));
             e.printStackTrace();
